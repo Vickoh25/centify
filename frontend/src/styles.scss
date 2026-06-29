@@ -1,0 +1,124 @@
+:root {
+  --primary:    #6c63ff;
+  --success:    #2ecc71;
+  --warning:    #f39c12;
+  --danger:     #e74c3c;
+  --dark:       #1a1a2e;
+  --card-bg:    #13141a;
+  --text-muted: #6c757d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #0f1015;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  outline: none;
+}
+
+.btn-sweep {
+  background: linear-gradient(135deg, #6c63ff, #2ecc71);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+}
+
+.btn-sweep:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(108, 99, 255, 0.5);
+}
+
+.btn-sweep:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.stat-card {
+  border-radius: 16px;
+  padding: 24px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.invested-card  { background: linear-gradient(135deg, #6c63ff, #a855f7); }
+.value-card     { background: linear-gradient(135deg, #2ecc71, #1abc9c); }
+.returns-card   { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.pending-card   { background: linear-gradient(135deg, #3498db, #2980b9); }
+
+.badge-invested   { background-color: #2ecc71; color: white; }
+.badge-pending    { background-color: #f39c12; color: white; }
+
+.toast-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  min-width: 320px;
+  border-radius: 12px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.counter-animate {
+  animation: countUp 0.5s ease;
+}
+
+@keyframes countUp {
+  from { transform: scale(1.2); color: #2ecc71; }
+  to   { transform: scale(1.0); }
+}
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--dark);
+  color: white;
+  padding: 20px 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 24px;
+}
+
+.nav-link-custom {
+  color: rgba(255,255,255,0.7);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+  border-radius: 0 50px 50px 0;
+  margin-right: 16px;
+  text-decoration: none;
+}
+
+.nav-link-custom:hover,
+.nav-link-custom.active {
+  background: rgba(108, 99, 255, 0.3);
+  color: white;
+}

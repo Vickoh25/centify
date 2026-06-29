@@ -1,0 +1,159 @@
+.profile {
+  max-width: 860px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 14px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #eeeef2;
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  color: #8b90a8;
+  font-size: 13.5px;
+}
+
+.card {
+  background: #13141a;
+  border: 1px solid #252836;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #eeeef2;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 11.5px;
+    color: #8b90a8;
+  }
+
+  input,
+  select {
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #353844;
+    background: #1a1c24;
+    color: #eeeef2;
+    font-size: 13px;
+    outline: none;
+
+    &:focus {
+      border-color: #6366f1;
+    }
+  }
+}
+
+.section-title {
+  border-top: 1px solid #252836;
+  padding-top: 16px;
+  color: #eeeef2;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.alert {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+
+  &.success {
+    background: #12301d;
+    border: 1px solid #1f5a34;
+    color: #22c55e;
+  }
+
+  &.error {
+    background: #3b1515;
+    border: 1px solid #4d2020;
+    color: #ef4444;
+  }
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+  width: fit-content;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+}
+
+.btn-primary {
+  background: #6366f1;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: #4f52e0;
+  }
+}
+
+.btn-danger {
+  background: #3b1515;
+  color: #ef4444;
+  border: 1px solid #4d2020;
+
+  &:hover {
+    background: #4a1f1f;
+  }
+}
+
+@media (max-width: 680px) {
+  .page-header,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,129 @@
+<div class="investments">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Investments</h1>
+      <p class="page-sub">Stocks · Bonds · Crypto · NSE Shares</p>
+    </div>
+    <button class="btn btn-primary" (click)="showForm = !showForm">
+      <i class="fa-solid fa-plus"></i> Add Investment
+    </button>
+  </div>
+
+  @if (error) {
+    <div class="alert">{{ error }}</div>
+  }
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Portfolio Value</div>
+      <div class="stat-val purple">{{ totalValue | currency }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Gain / Loss</div>
+      <div class="stat-val" [class.green]="totalGainLoss >= 0" [class.red]="totalGainLoss < 0">
+        {{ totalGainLoss >= 0 ? '+' : '' }}{{ totalGainLoss | currency }}
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Holdings</div>
+      <div class="stat-val">{{ investments.length }}</div>
+    </div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="card" *ngIf="showForm">
+    <div class="card-header">
+      <span class="card-title">Add Investment</span>
+      <button class="btn btn-ghost" (click)="showForm = false">Cancel</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Symbol</label>
+        <input [(ngModel)]="newInvestment.symbol" placeholder="e.g. AAPL, BTC, SCOM">
+      </div>
+      <div class="form-group">
+        <label>Name</label>
+        <input [(ngModel)]="newInvestment.name" placeholder="e.g. Apple Inc.">
+      </div>
+      <div class="form-group">
+        <label>Asset Type</label>
+        <select [(ngModel)]="newInvestment.assetType">
+          <option value="stock">Stock</option>
+          <option value="crypto">Crypto</option>
+          <option value="bond">Bond</option>
+          <option value="share">NSE Share</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <input [(ngModel)]="newInvestment.quantity" type="number" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Buy Price</label>
+        <input [(ngModel)]="newInvestment.buyPrice" type="number" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Current Price</label>
+        <input [(ngModel)]="newInvestment.currentPrice" type="number" placeholder="0.00">
+      </div>
+    </div>
+    <button class="btn btn-primary" (click)="saveInvestment()">
+      <i class="fa-solid fa-check"></i> Save Investment
+    </button>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab" [class.active]="activeTab === 'all'" (click)="setTab('all')">All</button>
+    <button class="tab" [class.active]="activeTab === 'stock'" (click)="setTab('stock')">Stocks</button>
+    <button class="tab" [class.active]="activeTab === 'crypto'" (click)="setTab('crypto')">Crypto</button>
+    <button class="tab" [class.active]="activeTab === 'bond'" (click)="setTab('bond')">Bonds</button>
+    <button class="tab" [class.active]="activeTab === 'share'" (click)="setTab('share')">NSE Shares</button>
+    <button class="tab refresh-tab" (click)="refreshPrices()" [disabled]="refreshing">
+      {{ refreshing ? 'Refreshing...' : 'Refresh Live Prices' }}
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div *ngIf="filtered.length === 0" class="empty">
+      No investments yet. Click "Add Investment" to get started.
+    </div>
+    <table *ngIf="filtered.length > 0">
+      <thead>
+        <tr>
+          <th>Asset</th>
+          <th>Type</th>
+          <th>Qty</th>
+          <th>Buy Price</th>
+          <th>Current Price</th>
+          <th>Value</th>
+          <th>Gain / Loss</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inv of filtered">
+          <td>
+            <div class="asset-name">{{ inv.symbol }}</div>
+            <div class="asset-sub">{{ inv.name }}</div>
+          </td>
+          <td><span class="badge" [class]="inv.assetType">{{ inv.assetType }}</span></td>
+          <td class="muted">{{ inv.quantity }}</td>
+          <td class="muted">{{ inv.buyPrice | currency }}</td>
+          <td>{{ inv.currentPrice | currency }}</td>
+          <td style="font-weight:500">{{ getValue(inv) | currency }}</td>
+          <td [class.green]="getGainLoss(inv) >= 0" [class.red]="getGainLoss(inv) < 0">
+            {{ getGainLoss(inv) >= 0 ? '+' : '' }}{{ getGainLoss(inv) | currency }}
+            ({{ getGainLossPct(inv) >= 0 ? '+' : '' }}{{ getGainLossPct(inv) | number:'1.1-1' }}%)
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteInvestment(inv.id!)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

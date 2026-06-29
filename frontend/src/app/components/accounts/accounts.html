@@ -1,0 +1,112 @@
+<div class="accounts">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Accounts</h1>
+      <p class="page-sub">Manage your linked financial accounts</p>
+    </div>
+    <button class="btn btn-primary" (click)="showForm = !showForm">
+      Link Account
+    </button>
+  </div>
+
+  @if (error) {
+    <div class="alert">{{ error }}</div>
+  }
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Balance</div>
+      <div class="stat-val blue">{{ totalBalance | currency }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Linked Accounts</div>
+      <div class="stat-val">{{ accounts.length }}</div>
+    </div>
+  </div>
+
+  @if (showForm) {
+    <div class="card form-card">
+      <div class="card-header">
+        <span class="card-title">Link New Account</span>
+        <button class="btn btn-ghost" (click)="showForm = false">Cancel</button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Account Name</label>
+          <input [(ngModel)]="newAccount.name" required maxlength="120" placeholder="e.g. KCB Main Account">
+        </div>
+        <div class="form-group">
+          <label>Bank Name</label>
+          <input [(ngModel)]="newAccount.bankName" maxlength="120" placeholder="e.g. KCB Bank">
+        </div>
+        <div class="form-group">
+          <label>Account Type</label>
+          <select [(ngModel)]="newAccount.type">
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+            <option value="credit">Credit Card</option>
+            <option value="investment">Investment</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Account Number</label>
+          <input [(ngModel)]="newAccount.accountNumber" maxlength="40" placeholder="e.g. **** 4821">
+        </div>
+        <div class="form-group">
+          <label>Current Balance</label>
+          <input [(ngModel)]="newAccount.balance" type="number" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select [(ngModel)]="newAccount.currency">
+            <option value="USD">USD</option>
+            <option value="KES">KES</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" (click)="saveAccount()">
+        Link Account
+      </button>
+    </div>
+  }
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Linked Accounts</span>
+    </div>
+    @if (accounts.length === 0) {
+      <div class="empty">No accounts linked yet. Click "Link Account" to get started.</div>
+    } @else {
+      @for (account of accounts; track account.id) {
+        <div class="account-row">
+          <div class="account-icon">
+            <i class="fa-solid"
+              [class.fa-building-columns]="account.type === 'checking'"
+              [class.fa-piggy-bank]="account.type === 'savings'"
+              [class.fa-credit-card]="account.type === 'credit'"
+              [class.fa-chart-line]="account.type === 'investment'">
+            </i>
+          </div>
+          <div class="account-info">
+            <div class="account-name">{{ account.name }}</div>
+            <div class="account-meta">
+              {{ account.bankName }} · {{ account.type }} · {{ account.accountNumber }}
+            </div>
+          </div>
+          <div class="account-right">
+            <div class="account-bal"
+              [class.red]="account.balance < 0"
+              [class.green]="account.balance >= 0">
+              {{ account.balance | currency: account.currency }}
+            </div>
+            <span class="live-badge">● Live</span>
+          </div>
+          <button class="btn btn-danger btn-sm" (click)="deleteAccount(account.id!)">
+            Delete
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<div class="dashboard">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Your financial overview</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Balance</div>
+      <div class="stat-val blue">{{ totalBalance | currency }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Income</div>
+      <div class="stat-val green">{{ totalIncome | currency }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Expenses</div>
+      <div class="stat-val red">{{ totalExpenses | currency }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Portfolio Value</div>
+      <div class="stat-val purple">{{ portfolioValue | currency }}</div>
+    </div>
+  </div>
+
+  <div class="card usage-card">
+    <div class="card-header">
+      <span class="card-title">Money Usage</span>
+      <div class="segmented">
+        <button type="button" [class.active]="usagePeriod === 'month'" (click)="setUsagePeriod('month')">Months</button>
+        <button type="button" [class.active]="usagePeriod === 'year'" (click)="setUsagePeriod('year')">Years</button>
+      </div>
+    </div>
+
+    @if (usageRows.length === 0) {
+    <div class="empty">No transaction history yet.</div>
+    } @else {
+    <div class="usage-list">
+      @for (row of usageRows; track row.key) {
+      <div class="usage-row">
+        <div class="usage-top">
+          <span class="usage-label">{{ row.label }}</span>
+          <span class="usage-net" [class.green]="row.net >= 0" [class.red]="row.net < 0">
+            {{ row.net | currency }}
+          </span>
+        </div>
+        <div class="usage-bars">
+          <div class="usage-bar income" [style.width.%]="getUsageWidth(row.income)"></div>
+          <div class="usage-bar expense" [style.width.%]="getUsageWidth(row.expenses)"></div>
+        </div>
+        <div class="usage-meta">
+          <span>Income {{ row.income | currency }}</span>
+          <span>Expenses {{ row.expenses | currency }}</span>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Recent Transactions</span>
+    </div>
+    @if (transactions.length === 0) {
+    <div class="empty">
+      No transactions yet. Add one from the Transactions page.
+    </div>
+    } @else {
+    @for (tx of transactions; track tx.id) {
+    <div class="tx-row">
+      <div class="tx-info">
+        <div class="tx-name">{{ tx.description }}</div>
+        <div class="tx-cat">{{ tx.category }} · {{ tx.date | date:'MMM d, y' }}</div>
+      </div>
+      <div class="tx-amt" [class.green]="tx.type === 'income'" [class.red]="tx.type === 'expense'">
+        {{ tx.type === 'income' ? '+' : '-' }}{{ tx.amount | currency }}
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>
