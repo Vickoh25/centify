@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
@@ -9,21 +9,30 @@ import { AuthService } from '../../services/auth';
   templateUrl: './profile.html',
   styleUrl: './profile.scss'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
-  private currentUser = this.authService.currentUser();
   saving = false;
   success = '';
   error = '';
 
   form = {
-    firstName: this.currentUser?.firstName || '',
-    lastName: this.currentUser?.lastName || '',
-    email: this.currentUser?.email || '',
-    currency: this.currentUser?.currency || 'USD',
+    firstName: '',
+    lastName: '',
+    email: '',
+    currency: 'USD',
     currentPassword: '',
     newPassword: ''
   };
+
+  ngOnInit() {
+    const currentUser = this.authService.currentUser();
+    if (currentUser) {
+      this.form.firstName = currentUser.firstName || '';
+      this.form.lastName = currentUser.lastName || '';
+      this.form.email = currentUser.email || '';
+      this.form.currency = currentUser.currency || 'USD';
+    }
+  }
 
   saveProfile() {
     this.success = '';
