@@ -13,7 +13,9 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:4200",
                         "http://localhost",
-                        "http://174.138.0.12"
+                        "http://174.138.0.12",
+                        "https://centifyapp.online",
+                        "https://www.centifyapp.online"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
