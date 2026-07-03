@@ -4,6 +4,7 @@ import { AccountsComponent } from './components/accounts/accounts';
 import { TransactionsComponent } from './components/transactions/transactions';
 import { BudgetsComponent } from './components/budgets/budgets';
 import { InvestmentsComponent } from './components/investments/investments';
+import { ProfileComponent } from './components/profile/profile';
 import { AuthComponent } from './components/auth/auth';
 import { authGuard, guestGuard } from './services/auth.guard';
 
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'transactions', component: TransactionsComponent, canActivate: [authGuard] },
   { path: 'budgets', component: BudgetsComponent, canActivate: [authGuard] },
   { path: 'investments', component: InvestmentsComponent, canActivate: [authGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: 'dashboard' }
 ];

@@ -18,6 +18,7 @@ export class SidebarComponent {
     { label: 'Budgets', icon: 'fa-wallet', route: '/budgets' },
     { label: 'Accounts', icon: 'fa-building-columns', route: '/accounts' },
     { label: 'Investments', icon: 'fa-chart-line', route: '/investments' },
+    { label: 'Profile', icon: 'fa-user', route: '/profile' },
   ];
 
   user = this.authService.currentUser;

@@ -1,32 +1,120 @@
-.profile {
-  max-width: 860px;
+.profile-page {
+  max-width: 920px;
 }
 
+// --- Header ---
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  gap: 14px;
+  gap: 16px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: #eeeef2;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .page-sub {
   color: #8b90a8;
-  font-size: 13.5px;
+  font-size: 13px;
+  margin-bottom: 4px;
 }
 
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+
+  &.badge-success {
+    background: #12301d;
+    color: #22c55e;
+    border: 1px solid #1f5a34;
+  }
+
+  &.badge-warning {
+    background: #3b2e10;
+    color: #f59e0b;
+    border: 1px solid #5a4520;
+  }
+}
+
+// --- Tabs ---
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: #13141a;
+  border: 1px solid #252836;
+  border-radius: 12px;
+  padding: 4px;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #8b90a8;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.15s;
+
+  &:hover {
+    color: #eeeef2;
+    background: #1a1c24;
+  }
+
+  &.active {
+    background: #6366f1;
+    color: #fff;
+  }
+}
+
+// --- Cards ---
 .card {
   background: #13141a;
   border: 1px solid #252836;
   border-radius: 12px;
   padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-danger {
+  border-color: #4d2020;
 }
 
 .card-header {
@@ -37,11 +125,53 @@
 }
 
 .card-title {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: #eeeef2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.text-danger {
+    color: #ef4444;
+  }
 }
 
+// --- Info Grid ---
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 11.5px;
+  color: #8b90a8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #eeeef2;
+  font-weight: 500;
+}
+
+.text-success {
+  color: #22c55e;
+}
+
+.text-warning {
+  color: #f59e0b;
+}
+
+// --- Forms ---
 .profile-form {
   display: flex;
   flex-direction: column;
@@ -66,13 +196,18 @@
 
   input,
   select {
-    padding: 9px 12px;
+    padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid #353844;
     background: #1a1c24;
     color: #eeeef2;
     font-size: 13px;
     outline: none;
+    transition: border-color 0.15s;
+
+    &::placeholder {
+      color: #555;
+    }
 
     &:focus {
       border-color: #6366f1;
@@ -80,19 +215,39 @@
   }
 }
 
-.section-title {
+.section-divider {
   border-top: 1px solid #252836;
   padding-top: 16px;
+}
+
+.section-title {
   color: #eeeef2;
   font-size: 13.5px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
+.section-hint {
+  color: #8b90a8;
+  font-size: 11.5px;
+  margin-top: 4px;
+}
+
+.form-actions {
+  padding-top: 8px;
+}
+
+// --- Alerts ---
 .alert {
-  margin-bottom: 14px;
-  padding: 10px 12px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
   border-radius: 8px;
-  font-size: 12.5px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &.success {
     background: #12301d;
@@ -107,8 +262,36 @@
   }
 }
 
+// --- Danger Zone ---
+.danger-text {
+  color: #8b90a8;
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.delete-confirm {
+  background: #1a1010;
+  border: 1px solid #4d2020;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.confirm-text {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+// --- Buttons ---
 .btn {
-  padding: 8px 16px;
+  padding: 9px 16px;
   border-radius: 8px;
   border: none;
   font-size: 13px;
@@ -119,7 +302,6 @@
   justify-content: center;
   gap: 6px;
   transition: all 0.15s;
-  width: fit-content;
 
   &:disabled {
     cursor: not-allowed;
@@ -141,19 +323,244 @@
   color: #ef4444;
   border: 1px solid #4d2020;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: #4a1f1f;
   }
 }
 
+.btn-secondary {
+  background: #252836;
+  color: #eeeef2;
+  border: 1px solid #353844;
+
+  &:hover:not(:disabled) {
+    background: #353844;
+  }
+}
+
+// --- Stats Grid ---
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: #13141a;
+  border: 1px solid #252836;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+
+  &.income {
+    background: #12301d;
+    color: #22c55e;
+  }
+
+  &.expense {
+    background: #3b1515;
+    color: #ef4444;
+  }
+
+  &.balance {
+    background: #1a1a3e;
+    color: #6366f1;
+  }
+
+  &.portfolio {
+    background: #1a2e3e;
+    color: #3b82f6;
+  }
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 11.5px;
+  color: #8b90a8;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #eeeef2;
+}
+
+// --- Summary Row ---
+.summary-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  margin-bottom: 0;
+}
+
+.budget-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.budget-bar {
+  height: 8px;
+  background: #252836;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.budget-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.budget-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #8b90a8;
+}
+
+.budget-percent {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.account-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.account-count {
+  font-size: 32px;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+.account-label {
+  font-size: 13px;
+  color: #8b90a8;
+}
+
+// --- Transactions List ---
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #252836;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.tx-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+
+  &.income {
+    background: #12301d;
+    color: #22c55e;
+  }
+
+  &.expense {
+    background: #3b1515;
+    color: #ef4444;
+  }
+}
+
+.tx-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tx-desc {
+  font-size: 13px;
+  color: #eeeef2;
+  font-weight: 500;
+}
+
+.tx-date {
+  font-size: 11.5px;
+  color: #8b90a8;
+}
+
+.tx-amount {
+  font-size: 13.5px;
+  font-weight: 600;
+
+  &.income {
+    color: #22c55e;
+  }
+
+  &.expense {
+    color: #ef4444;
+  }
+}
+
+.empty-state {
+  color: #8b90a8;
+  font-size: 13px;
+  text-align: center;
+  padding: 24px 0;
+}
+
+// --- Responsive ---
 @media (max-width: 680px) {
-  .page-header,
-  .form-grid {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-grid,
+  .info-grid,
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 
-  .page-header {
-    align-items: flex-start;
-    flex-direction: column;
+  .summary-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 }
