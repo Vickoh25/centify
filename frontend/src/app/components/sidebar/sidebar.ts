@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth';
 })
 export class SidebarComponent {
   private authService = inject(AuthService);
+
+  collapsed = signal(false);
 
   navItems = [
     { label: 'Dashboard', icon: 'fa-chart-pie', route: '/dashboard' },
@@ -42,4 +44,8 @@ export class SidebarComponent {
   email = computed(() => {
     return this.authService.currentUser()?.email || '';
   });
+
+  toggleSidebar() {
+    this.collapsed.set(!this.collapsed());
+  }
 }

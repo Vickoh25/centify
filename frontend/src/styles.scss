@@ -89,21 +89,7 @@ textarea {
   to   { transform: scale(1.0); }
 }
 
-.sidebar {
-  width: 260px;
-  min-height: 100vh;
-  background: var(--dark);
-  color: white;
-  padding: 20px 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-}
-
-.main-content {
-  margin-left: 260px;
-  padding: 24px;
-}
+/* Sidebar layout is handled by component-level styles */
 
 .nav-link-custom {
   color: rgba(255,255,255,0.7);

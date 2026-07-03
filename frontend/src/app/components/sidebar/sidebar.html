@@ -1,28 +1,40 @@
-<nav class="sidebar">
-  <div class="logo">
-    <div class="logo-mark">
-      <i class="fa-solid fa-coins"></i>
+<nav class="sidebar" [class.collapsed]="collapsed()">
+  <div class="sidebar-top">
+    <div class="logo">
+      <div class="logo-mark">
+        <i class="fa-solid fa-coins"></i>
+      </div>
+      @if (!collapsed()) {
+        <span class="logo-text">Centify</span>
+      }
     </div>
-    <span class="logo-text">Centify</span>
+
+    <button class="toggle-btn" (click)="toggleSidebar()" [attr.title]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'">
+      <i class="fa-solid" [class.fa-angles-left]="!collapsed()" [class.fa-angles-right]="collapsed()"></i>
+    </button>
   </div>
 
   <div class="nav-links">
     @for (item of navItems; track item.route) {
-      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? item.label : null">
         <i class="fa-solid {{ item.icon }}"></i>
-        <span>{{ item.label }}</span>
+        @if (!collapsed()) {
+          <span>{{ item.label }}</span>
+        }
       </a>
     }
   </div>
 
   <div class="sidebar-footer">
     @if (user()) {
-      <a routerLink="/profile" class="user-chip">
+      <a routerLink="/profile" class="user-chip" [attr.title]="collapsed() ? displayName() : null">
         <div class="avatar">{{ initials() }}</div>
-        <div>
-          <div class="uname">{{ displayName() }}</div>
-          <div class="uemail">{{ email() }}</div>
-        </div>
+        @if (!collapsed()) {
+          <div>
+            <div class="uname">{{ displayName() }}</div>
+            <div class="uemail">{{ email() }}</div>
+          </div>
+        }
       </a>
     }
   </div>

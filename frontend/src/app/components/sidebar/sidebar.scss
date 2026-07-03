@@ -9,6 +9,50 @@
   position: sticky;
   top: 0;
   flex-shrink: 0;
+  transition: width 0.25s ease;
+  overflow: hidden;
+
+  &.collapsed {
+    width: 68px;
+
+    .logo {
+      justify-content: center;
+      padding: 0 0 26px;
+    }
+
+    .nav-links {
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      justify-content: center;
+      padding: 10px;
+
+      i {
+        width: auto;
+        font-size: 16px;
+      }
+    }
+
+    .sidebar-footer {
+      padding: 16px 8px 0;
+    }
+
+    .user-chip {
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .toggle-btn {
+      margin: 0 auto;
+    }
+  }
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .logo {
@@ -27,6 +71,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
+
+  i {
+    font-size: 20px;
+    color: #6366f1;
+  }
 
   img {
     width: 100%;
@@ -40,6 +90,34 @@
   font-size: 21px;
   font-weight: 600;
   color: #eeeef2;
+  white-space: nowrap;
+}
+
+// Toggle button
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #353844;
+  background: #1a1c24;
+  color: #8b90a8;
+  cursor: pointer;
+  margin: 0 18px 12px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  i {
+    font-size: 11px;
+  }
+
+  &:hover {
+    background: #252836;
+    color: #eeeef2;
+    border-color: #6366f1;
+  }
 }
 
 .nav-links {
@@ -60,10 +138,12 @@
   text-decoration: none;
   font-size: 13.5px;
   transition: all 0.15s;
+  white-space: nowrap;
 
   i {
     width: 16px;
     font-size: 14px;
+    flex-shrink: 0;
   }
 
   &:hover {
@@ -96,6 +176,7 @@
   border-radius: 9px;
   border: 1px solid #252836;
   text-decoration: none;
+  overflow: hidden;
 
   &:hover {
     border-color: #353844;
@@ -120,9 +201,62 @@
   font-size: 12.5px;
   font-weight: 500;
   color: #eeeef2;
+  white-space: nowrap;
 }
 
 .uemail {
   font-size: 10.5px;
   color: #52566b;
+  white-space: nowrap;
+}
+
+// Mobile: sidebar collapses by default
+@media (max-width: 768px) {
+  .sidebar {
+    width: 68px;
+
+    .logo {
+      justify-content: center;
+      padding: 0 0 26px;
+    }
+
+    .nav-links {
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      justify-content: center;
+      padding: 10px;
+
+      i {
+        width: auto;
+        font-size: 16px;
+      }
+
+      span {
+        display: none;
+      }
+    }
+
+    .sidebar-footer {
+      padding: 16px 8px 0;
+    }
+
+    .user-chip {
+      justify-content: center;
+      padding: 8px;
+
+      div:not(.avatar) {
+        display: none;
+      }
+    }
+
+    .logo-text {
+      display: none;
+    }
+
+    .toggle-btn {
+      margin: 0 auto 12px;
+    }
+  }
 }
