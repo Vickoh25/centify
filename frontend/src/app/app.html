@@ -1,8 +1,8 @@
-<div class="app-container">
-  @if (!isAuthPage) {
+<div class="app-container" [class.no-sidebar]="!showSidebar">
+  @if (showSidebar) {
     <app-sidebar></app-sidebar>
   }
-  <div class="main-content" [class.auth-content]="isAuthPage">
+  <div class="main-content" [class.auth-content]="isAuthPage" [class.landing-content]="isLandingPage">
     <router-outlet></router-outlet>
   </div>
 </div>

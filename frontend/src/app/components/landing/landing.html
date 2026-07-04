@@ -1,0 +1,140 @@
+<div class="landing">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="fa-solid fa-coins brand-icon"></i>
+        <span class="brand-text">Centify</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a routerLink="/login" class="nav-link">Login</a>
+        <a routerLink="/register" class="btn-nav">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Take control of your <span class="highlight">finances</span> with confidence.
+        </h1>
+        <p class="hero-subtitle">
+          Track expenses, manage budgets, monitor investments, and grow your wealth — all in one powerful app. Built to make your money work for you.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/register" class="btn-primary">
+            Get Started — It's Free
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a routerLink="/login" class="btn-secondary">
+            I already have an account
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="preview-card">
+          <div class="preview-header">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Financial Overview</span>
+          </div>
+          <div class="preview-stats">
+            <div class="preview-stat">
+              <span class="stat-label">Balance</span>
+              <span class="stat-amount positive">$12,450.00</span>
+            </div>
+            <div class="preview-stat">
+              <span class="stat-label">Income</span>
+              <span class="stat-amount positive">+$4,200.00</span>
+            </div>
+            <div class="preview-stat">
+              <span class="stat-label">Expenses</span>
+              <span class="stat-amount negative">-$1,850.00</span>
+            </div>
+          </div>
+          <div class="preview-bar-section">
+            <span class="bar-label">Budget used</span>
+            <div class="preview-bar">
+              <div class="preview-bar-fill" style="width: 62%"></div>
+            </div>
+            <span class="bar-percent">62%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Everything you need to manage your money</h2>
+        <p class="section-subtitle">Powerful features designed to give you complete control over your financial life.</p>
+      </div>
+      <div class="features-grid">
+        @for (feature of features; track feature.title) {
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fa-solid {{ feature.icon }}"></i>
+            </div>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-desc">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title">Get started in 3 simple steps</h2>
+        <p class="section-subtitle">Start managing your finances in under a minute.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Create your account</h3>
+          <p class="step-desc">Sign up for free with just your name and email. No credit card required.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Add your accounts</h3>
+          <p class="step-desc">Link your bank accounts and set up your budgets and financial goals.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Track & grow</h3>
+          <p class="step-desc">Monitor your spending, investments, and watch your wealth grow over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-container">
+      <h2 class="cta-title">Ready to take control of your finances?</h2>
+      <p class="cta-subtitle">Join thousands of users who trust Centify to manage their money smarter.</p>
+      <a routerLink="/register" class="btn-primary btn-large">
+        Get Started — It's Free
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <i class="fa-solid fa-coins"></i>
+        <span>Centify</span>
+      </div>
+      <p class="footer-text">&copy; 2026 Centify. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

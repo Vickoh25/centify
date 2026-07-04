@@ -16,4 +16,12 @@ export class App {
   get isAuthPage(): boolean {
     return this.router.url === '/login' || this.router.url === '/register' || this.router.url === '/verify-email';
   }
+
+  get isLandingPage(): boolean {
+    return this.router.url === '/' || this.router.url === '';
+  }
+
+  get showSidebar(): boolean {
+    return !this.isAuthPage && !this.isLandingPage;
+  }
 }
