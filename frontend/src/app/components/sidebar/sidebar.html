@@ -4,9 +4,7 @@
       <div class="logo-mark">
         <i class="fa-solid fa-coins"></i>
       </div>
-      @if (!collapsed()) {
-        <span class="logo-text">Centify</span>
-      }
+      <span class="logo-text">Centify</span>
     </div>
 
     <button class="toggle-btn" (click)="toggleSidebar()" [attr.title]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'">
@@ -18,9 +16,7 @@
     @for (item of navItems; track item.route) {
       <a [routerLink]="item.route" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? item.label : null">
         <i class="fa-solid {{ item.icon }}"></i>
-        @if (!collapsed()) {
-          <span>{{ item.label }}</span>
-        }
+        <span>{{ item.label }}</span>
       </a>
     }
   </div>
@@ -29,12 +25,10 @@
     @if (user()) {
       <a routerLink="/profile" class="user-chip" [attr.title]="collapsed() ? displayName() : null">
         <div class="avatar">{{ initials() }}</div>
-        @if (!collapsed()) {
-          <div>
-            <div class="uname">{{ displayName() }}</div>
-            <div class="uemail">{{ email() }}</div>
-          </div>
-        }
+        <div>
+          <div class="uname">{{ displayName() }}</div>
+          <div class="uemail">{{ email() }}</div>
+        </div>
       </a>
     }
   </div>
