@@ -14,11 +14,13 @@ export class App {
   constructor(private router: Router) {}
 
   get isAuthPage(): boolean {
-    return this.router.url === '/login' || this.router.url === '/register' || this.router.url === '/verify-email';
+    const url = this.router.url.split('?')[0];
+    return url === '/login' || url === '/register' || url === '/verify-email';
   }
 
   get isLandingPage(): boolean {
-    return this.router.url === '/' || this.router.url === '';
+    const url = this.router.url.split('?')[0];
+    return url === '/' || url === '';
   }
 
   get showSidebar(): boolean {

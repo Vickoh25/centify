@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-landing',
@@ -9,6 +10,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './landing.scss'
 })
 export class LandingComponent {
+  constructor(public authService: AuthService) {}
+
   features = [
     {
       icon: 'fa-wallet',
