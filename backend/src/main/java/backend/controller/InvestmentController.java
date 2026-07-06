@@ -37,6 +37,9 @@ public class InvestmentController {
 
     @PostMapping
     public Investment createInvestment(@AuthenticationPrincipal backend.model.User user, @Valid @RequestBody Investment investment) {
+        if (!Boolean.TRUE.equals(user.getEmailVerified())) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Email verification is required to add an investment");
+        }
         investment.setUser(user);
         marketDataService.getQuote(investment.getSymbol(), investment.getAssetType())
                 .ifPresent(quote -> {

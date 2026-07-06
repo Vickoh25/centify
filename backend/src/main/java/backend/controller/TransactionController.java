@@ -39,6 +39,9 @@ public class TransactionController {
 
     @PostMapping
     public Transaction createTransaction(@AuthenticationPrincipal backend.model.User user, @Valid @RequestBody Transaction transaction) {
+        if (!Boolean.TRUE.equals(user.getEmailVerified())) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Email verification is required to add a transaction");
+        }
         transaction.setUser(user);
         return transactionRepository.save(transaction);
     }

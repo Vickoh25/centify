@@ -29,6 +29,9 @@ public class AccountController {
 
     @PostMapping
     public Account createAccount(@AuthenticationPrincipal backend.model.User user, @Valid @RequestBody Account account) {
+        if (!Boolean.TRUE.equals(user.getEmailVerified())) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Email verification is required to add an account");
+        }
         account.setUser(user);
         return accountRepository.save(account);
     }

@@ -34,6 +34,9 @@ public class BudgetController {
 
     @PostMapping
     public Budget createBudget(@AuthenticationPrincipal backend.model.User user, @Valid @RequestBody Budget budget) {
+        if (!Boolean.TRUE.equals(user.getEmailVerified())) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Email verification is required to add a budget");
+        }
         budget.setUser(user);
         return budgetRepository.save(budget);
     }
