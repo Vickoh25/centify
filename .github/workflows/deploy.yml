@@ -41,6 +41,14 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@master
+      with:
+        envs: MAIL_USERNAME,MAIL_PASSWORD
+        script: |
+          cd ~/centify
+          export CENTIFY_MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+          export CENTIFY_MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
           cd ~/centify
           docker-compose pull
           docker-compose up -d
