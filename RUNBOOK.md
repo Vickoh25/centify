@@ -121,3 +121,49 @@ npm test
 *   `/frontend`: Angular application (v21).
 *   `/nginx.conf`: Reverse proxy configuration for Docker setup.
 *   `docker-compose.yml`: Orchestration for all services.
+
+---
+
+## 🐳 Container & Image Management
+
+Centify uses the following Docker images and containers:
+
+| Service | Container Name | Image Name | Port (Internal) |
+| :--- | :--- | :--- | :--- |
+| **Nginx** | `centify-nginx` | `nginx:alpine` | `80` |
+| **Frontend** | `centify-frontend` | `vickoh25/centify-frontend:latest` | `80` |
+| **Backend** | `centify-backend` | `vickoh25/centify-backend:latest` | `8080` |
+| **Database** | `centify-postgres` | `postgres:16` | `5432` |
+
+### Accessing Containers
+To enter a running container's shell:
+```bash
+docker exec -it <container_name> sh
+```
+Example (Backend logs):
+```bash
+docker logs -f centify-backend
+```
+
+---
+
+## 🔒 Server Access Guidelines
+
+### API Endpoints
+All API requests should be directed through the Nginx reverse proxy on port 80.
+
+*   **Base URL:** `http://localhost/api`
+*   **Authentication:** JWT Bearer Token required for protected routes.
+*   **Rate Limiting:** Nginx is configured to limit requests to `10r/s` per IP with a burst of `20`.
+
+### Database Access
+The PostgreSQL database is only accessible within the Docker network by default. To access it from your host:
+*   **Host:** `localhost`
+*   **Port:** `5432`
+*   **Database:** `centify`
+*   **Credentials:** `centify_user` / `centify123`
+
+### Security Notes
+1.  **JWT Secret:** Change the `jwt.secret` in `application.properties` or via environment variable before deploying to production.
+2.  **CORS:** The backend is currently configured to allow `http://localhost:4200` for development. Update this in `UserController.java` and other controllers for production domains.
+3.  **Ports:** Only port `80` (HTTP) is exposed to the host by the Nginx container. All other service ports are internal to the Docker network.
