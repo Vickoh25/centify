@@ -1,6 +1,5 @@
 # CENTIFY PROJECT RUNBOOK
 
-**Version**: 1.0  
 **Last Updated**: July 2026  
 **Project**: Centify (Financial Management Application)  
 **Status**: Production-Ready (Live at https://centifyapp.online)
@@ -44,9 +43,8 @@ Centify is a full-stack financial management application that helps users track 
 ### Key URLs
 
 - **Production**: https://centifyapp.online
-- **GitHub**: https://github.com/vickoh25/centify (if public)
+- **GitHub**: https://github.com/vickoh25/centify 
 - **Docker Hub**: https://hub.docker.com/u/vickoh25
-- **Domain Registrar**: [Your registrar]
 - **VPS Provider**: DigitalOcean (174.138.0.12)
 
 ---
@@ -101,25 +99,23 @@ All running in Docker containers on DigitalOcean VPS (174.138.0.12)
 ## PREREQUISITES
 
 ### For Local Development
-
-- **Git**: https://git-scm.com/
-- **Java 17 LTS**: https://adoptium.net/ (or OpenJDK)
+- **Java 17 LTS**: OpenJDK
 - **Maven 3.8+**: https://maven.apache.org/
 - **Node.js 18+**: https://nodejs.org/
 - **Docker Desktop**: https://www.docker.com/products/docker-desktop
-- **PostgreSQL 16**: https://www.postgresql.org/ (or use Docker)
+- **PostgreSQL 16**: https://www.postgresql.org/
 - **Git**: Version control for source code
 
 ### For Production Deployment
 
-- **DigitalOcean Account**: https://www.digitalogcean.com/
+- **DigitalOcean VPS**: 174.138.0.12
 - **SSH Key Pair**: For secure server access
 - **Domain Name**: `centifyapp.online` (registered & configured)
 - **Docker**: Pre-installed on server
 - **Docker Compose**: Plugin installed
 - **certbot**: For Let's Encrypt certificates
 
-### Environment Setup (Mac/Linux)
+### Environment Setup 
 
 ```bash
 # Check Java version
@@ -638,26 +634,23 @@ docker push vickoh25/centify-frontend:1.0.0
 
 ```bash
 # Using SSH key (password login is disabled for security)
-ssh -i ~/.ssh/id_rsa deploy@174.138.0.12
+ssh -i ~/.ssh/id_ed25519 deploy@174.138.0.12
 
-# Or if your key has a different name
-ssh -i ~/.ssh/centify.pem deploy@174.138.0.12
 ```
 
 ### Step 4: Clone Repository on Server
 
 ```bash
 # SSH into server first
-cd /opt  # or preferred directory
-git clone https://github.com/vickoh25/centify.git
 cd centify
+git clone https://github.com/vickoh25/centify.git
 ```
 
 ### Step 5: Create Production Environment File
 
 ```bash
 # Create .env with production secrets
-nano .env  # or vi .env
+nano .env  
 
 # Paste production environment variables
 # Save: Ctrl+X → Y → Enter
@@ -694,18 +687,17 @@ sudo apt install -y certbot python3-certbot-nginx
 docker compose stop centify-nginx
 
 sudo certbot certonly --standalone \
-  -d centifyapp.online \
-  --email admin@centifyapp.online
+  -d centifyapp.online 
 
 # Copy certificates into nginx container
 docker cp /etc/letsencrypt/live/centifyapp.online/fullchain.pem \
-  centify-nginx:/etc/nginx/certs/cert.pem
+  nginx:/etc/nginx/certs/cert.pem
 
 docker cp /etc/letsencrypt/live/centifyapp.online/privkey.pem \
-  centify-nginx:/etc/nginx/certs/key.pem
+  nginx:/etc/nginx/certs/key.pem
 
 # Restart nginx
-docker compose start centify-nginx
+docker compose start nginx
 ```
 
 ### Step 9: Verify Production Deployment
@@ -798,16 +790,6 @@ docker exec -it centify-postgres psql -U centify_user -d centify
 \dt                     # List tables
 SELECT COUNT(*) FROM users;  # Check record count
 \q                      # Exit
-```
-
-#### Verify Backups
-
-```bash
-# PostgreSQL backup (if set up)
-docker exec centify-postgres pg_dump -U centify_user -d centify > backup_$(date +%Y%m%d).sql
-
-# Check backup
-ls -lh backup_*.sql
 ```
 
 ### Monthly Tasks
@@ -957,8 +939,7 @@ docker compose up -d
 
 ```bash
 # Check certificate expiry
-openssl x509 -in /etc/letsencrypt/live/centifyapp.online/cert.pem \
-  -noout -dates
+sudo certbot certificates
 
 # Check certbot renewal log
 sudo journalctl -u certbot.timer
@@ -970,14 +951,10 @@ sudo journalctl -u certbot.timer
 # Option 1: Manual renewal
 sudo certbot renew --force-renewal
 
-# Option 2: Check renewal cron job
-sudo crontab -e
-# Should have: 0 3 * * * certbot renew --quiet
-
-# Option 3: Test renewal without actually renewing
+# Option 2: Test renewal without actually renewing
 sudo certbot renew --dry-run
 
-# Option 4: Force renewal if near expiry
+# Option 3: Force renewal if near expiry
 sudo certbot renew --force-renewal --email admin@centifyapp.online
 ```
 
@@ -1014,9 +991,6 @@ docker exec centify-postgres vacuumdb -U centify_user -d centify
 docker compose logs --tail=0 | wc -l
 docker logs --tail=0 $(docker ps -aq)
 
-# Option 4: Upgrade server (in DigitalOcean console)
-# - Resize droplet to larger size
-# - Reboot
 ```
 
 ### Issue 5: Frontend Not Loading
@@ -1027,7 +1001,7 @@ docker logs --tail=0 $(docker ps -aq)
 
 ```bash
 # Check nginx logs
-docker compose logs centify-nginx
+docker compose logs nginx
 
 # Check if frontend container is running
 docker compose ps centify-frontend
@@ -1207,18 +1181,16 @@ curl https://centifyapp.online/api/health
 
 ```bash
 # 1. Check expiry
-openssl x509 -in /etc/letsencrypt/live/centifyapp.online/cert.pem \
-  -noout -dates
+sudo certbot certificates
 
 # 2. Force immediate renewal
 sudo certbot renew --force-renewal
 
 # 3. Verify new certificate
-openssl x509 -in /etc/letsencrypt/live/centifyapp.online/cert.pem \
-  -noout -dates
+sudo certbot certificates
 
 # 4. Update nginx (if using Docker)
-docker compose restart centify-nginx
+docker-compose restart nginx
 
 # 5. Verify HTTPS is working
 openssl s_client -connect centifyapp.online:443 -brief
@@ -1229,7 +1201,7 @@ openssl s_client -connect centifyapp.online:443 -brief
 ## CONTACT & SUPPORT
 
 **Project Lead**: Victor Okello  
-**Email**: vickoh25@gmail.com  
+**Email**: okellov911@gmail.com  
 **GitHub**: https://github.com/vickoh25  
 **Docker Hub**: https://hub.docker.com/u/vickoh25
 
@@ -1244,5 +1216,4 @@ openssl s_client -connect centifyapp.online:443 -brief
 ---
 
 **Last Updated**: July 2026  
-**Status**: Production  
-**Next Review**: August 2026
+**Status**: Production
