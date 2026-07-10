@@ -66,15 +66,23 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
-        if (Boolean.TRUE.equals(user.getEmailVerified())) {
-            return new AuthResponse(user, jwtService.generateToken(user), "Login successful");
+        if (Boolean.FALSE.equals(user.getEmailVerified())) {
+            // Email not verified — send OTP and return user with a verification prompt
+            String otp = prepareEmailOtp(user);
+            userRepository.save(user);
+            emailOtpService.sendOtp(user.getEmail(), otp);
+            return new AuthResponse(user, null, "Email not verified. A verification code has been sent to your email.");
         }
 
-        // Email not verified — send OTP and return user with a verification prompt
-        String otp = prepareEmailOtp(user);
-        userRepository.save(user);
-        emailOtpService.sendOtp(user.getEmail(), otp);
-        return new AuthResponse(user, null, "Email not verified. A verification code has been sent to your email.");
+        // Email verified, check if 2FA is enabled
+        if (Boolean.TRUE.equals(user.getTwoFactorEnabled())) {
+            String otp = prepareTwoFactorOtp(user);
+            User saved = userRepository.save(user);
+            emailOtpService.sendOtp(saved.getEmail(), otp);
+            return new AuthResponse(user, null, "2FA verification required. A code has been sent to your email.");
+        }
+
+        return new AuthResponse(user, jwtService.generateToken(user), "Login successful");
     }
 
     public User verifyEmail(Long userId, String code) {
@@ -180,5 +188,51 @@ public class UserService {
         user.setEmailOtpHash(passwordEncoder.encode(otp));
         user.setEmailOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
         return otp;
+    }
+
+    private String prepareTwoFactorOtp(User user) {
+        String otp = String.format("%06d", secureRandom.nextInt(1_000_000));
+        user.setTwoFactorOtpHash(passwordEncoder.encode(otp));
+        user.setTwoFactorOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+        return otp;
+    }
+
+    public User verifyTwoFactor(Long userId, String code) {
+        require(code, "2FA code is required");
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if (Boolean.FALSE.equals(user.getTwoFactorEnabled())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "2FA is not enabled for this user");
+        }
+        if (user.getTwoFactorOtpHash() == null || user.getTwoFactorOtpExpiresAt() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No 2FA code is active. Please login again.");
+        }
+        if (LocalDateTime.now().isAfter(user.getTwoFactorOtpExpiresAt())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "2FA code has expired. Please login again.");
+        }
+        if (!passwordEncoder.matches(code, user.getTwoFactorOtpHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 2FA code");
+        }
+
+        user.setTwoFactorOtpHash(null);
+        user.setTwoFactorOtpExpiresAt(null);
+        return userRepository.save(user);
+    }
+
+    public User enableTwoFactor(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setTwoFactorEnabled(true);
+        return userRepository.save(user);
+    }
+
+    public User disableTwoFactor(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setTwoFactorEnabled(false);
+        user.setTwoFactorOtpHash(null);
+        user.setTwoFactorOtpExpiresAt(null);
+        return userRepository.save(user);
     }
 }

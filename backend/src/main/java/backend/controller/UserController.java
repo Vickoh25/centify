@@ -7,6 +7,7 @@ import backend.dto.RegisterRequest;
 import backend.dto.ResendOtpByEmailRequest;
 import backend.dto.VerifyEmailByEmailRequest;
 import backend.dto.VerifyEmailRequest;
+import backend.dto.VerifyTwoFactorRequest;
 import backend.model.User;
 import backend.repository.UserRepository;
 import backend.service.UserService;
@@ -101,5 +102,20 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/verify-2fa")
+    public User verifyTwoFactor(@PathVariable Long id, @Valid @RequestBody VerifyTwoFactorRequest request) {
+        return userService.verifyTwoFactor(id, request.code());
+    }
+
+    @PostMapping("/{id}/enable-2fa")
+    public User enableTwoFactor(@PathVariable Long id) {
+        return userService.enableTwoFactor(id);
+    }
+
+    @PostMapping("/{id}/disable-2fa")
+    public User disableTwoFactor(@PathVariable Long id) {
+        return userService.disableTwoFactor(id);
     }
 }

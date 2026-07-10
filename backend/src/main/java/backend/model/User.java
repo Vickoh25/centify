@@ -36,5 +36,13 @@ public class User {
     @JsonIgnore
     private LocalDateTime emailOtpExpiresAt;
 
+    private Boolean twoFactorEnabled = false;
+
+    @JsonIgnore
+    private String twoFactorOtpHash;
+
+    @JsonIgnore
+    private LocalDateTime twoFactorOtpExpiresAt;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }
