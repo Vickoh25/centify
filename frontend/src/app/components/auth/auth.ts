@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -10,10 +10,11 @@ import { AuthService } from '../../services/auth';
   templateUrl: './auth.html',
   styleUrl: './auth.scss'
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
   mode: 'login' | 'register' = 'login';
   loading = false;
   error = '';
+  showVerificationNotice = false;
 
   form = {
     firstName: '',
@@ -25,13 +26,25 @@ export class AuthComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
     this.mode = this.router.url === '/register' ? 'register' : 'login';
+
+    // Check if user was redirected from verification success
+    this.route.queryParams.subscribe(params => {
+      if (params['verified'] === 'true') {
+        this.showVerificationNotice = false;
+        this.error = '';
+      }
+    });
   }
 
   submit() {
     this.error = '';
+    this.showVerificationNotice = false;
 
     if (!this.isFormValid()) {
       return;
@@ -44,13 +57,28 @@ export class AuthComponent {
       : this.authService.register(this.form);
 
     action.subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
+
+        // If login returned no token, the user's email is not verified
+        if (this.mode === 'login' && !response?.token) {
+          this.router.navigate(['/verify-email']);
+          return;
+        }
+
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.loading = false;
-        this.error = err?.error?.message || err?.error?.error || 'Authentication failed. Please try again.';
+
+        // Check if the error is about email verification
+        const msg = err?.error?.message || err?.error?.error || '';
+        if (msg.toLowerCase().includes('verification') || msg.toLowerCase().includes('verify')) {
+          this.router.navigate(['/verify-email']);
+          return;
+        }
+
+        this.error = msg || 'Authentication failed. Please try again.';
       }
     });
   }
@@ -58,6 +86,7 @@ export class AuthComponent {
   switchMode(mode: 'login' | 'register') {
     this.mode = mode;
     this.error = '';
+    this.showVerificationNotice = false;
   }
 
   private isFormValid(): boolean {

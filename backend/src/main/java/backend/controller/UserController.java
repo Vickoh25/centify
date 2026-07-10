@@ -4,6 +4,8 @@ import backend.dto.AuthResponse;
 import backend.dto.LoginRequest;
 import backend.dto.ProfileUpdateRequest;
 import backend.dto.RegisterRequest;
+import backend.dto.ResendOtpByEmailRequest;
+import backend.dto.VerifyEmailByEmailRequest;
 import backend.dto.VerifyEmailRequest;
 import backend.model.User;
 import backend.repository.UserRepository;
@@ -39,9 +41,25 @@ public class UserController {
         return userService.verifyEmail(user.getId(), request.code());
     }
 
+    /**
+     * Verify email by email address and code (for unverified users who don't have a JWT yet).
+     */
+    @PostMapping("/verify-email/by-email")
+    public User verifyEmailByEmail(@Valid @RequestBody VerifyEmailByEmailRequest request) {
+        return userService.verifyEmailByEmail(request.email(), request.code());
+    }
+
     @PostMapping("/resend-otp")
     public User resendOtp(@AuthenticationPrincipal User user) {
         return userService.resendEmailOtp(user.getId());
+    }
+
+    /**
+     * Resend OTP by email address (for unverified users who don't have a JWT yet).
+     */
+    @PostMapping("/resend-otp/by-email")
+    public User resendOtpByEmail(@Valid @RequestBody ResendOtpByEmailRequest request) {
+        return userService.resendEmailOtpByEmail(request.email());
     }
 
     @GetMapping

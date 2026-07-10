@@ -20,6 +20,27 @@ export class VerifyEmailComponent {
   error = '';
   success = '';
 
+  /**
+   * Returns the email address to show in the subtitle.
+   * Falls back to stored user email, or empty string if neither is available.
+   */
+  get emailDisplay(): string {
+    const currentUserEmail = this.user()?.email;
+    if (currentUserEmail) {
+      return currentUserEmail;
+    }
+    try {
+      const raw = localStorage.getItem('centify_user');
+      if (raw) {
+        const storedUser: any = JSON.parse(raw);
+        return storedUser.email || '';
+      }
+    } catch {
+      // ignore
+    }
+    return '';
+  }
+
   verify() {
     this.error = '';
     this.success = '';
@@ -30,10 +51,28 @@ export class VerifyEmailComponent {
     }
 
     this.loading = true;
-    this.authService.verifyEmail(this.code).subscribe({
+
+    // Determine which endpoint to use based on whether the user has a JWT token
+    const hasToken = !!this.authService.getToken();
+    const email = this.emailDisplay;
+
+    const verifyObs = hasToken
+      ? this.authService.verifyEmail(this.code)
+      : this.authService.verifyEmailByEmail(email, this.code);
+
+    verifyObs.subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+        // Re-login to get a full JWT token now that email is verified
+        // We need to redirect to login for the user to re-enter credentials,
+        // OR we can try to re-login with stored credentials. Since we don't store password,
+        // we'll redirect to login with a success message.
+        // Actually, after verification the /verify-email endpoint returns the updated User.
+        // But without a token, we can't access protected routes. Let's redirect to login
+        // with a query param to show success.
+        // Better approach: after verify, the user is verified but still needs a token.
+        // We redirect to login page where they can sign in with their credentials.
+        this.router.navigate(['/login'], { queryParams: { verified: 'true' } });
       },
       error: err => {
         this.loading = false;
@@ -47,7 +86,14 @@ export class VerifyEmailComponent {
     this.success = '';
     this.resending = true;
 
-    this.authService.resendOtp().subscribe({
+    const email = this.emailDisplay;
+    const hasToken = !!this.authService.getToken();
+
+    const resendObs = hasToken
+      ? this.authService.resendOtp()
+      : this.authService.resendOtpByEmail(email);
+
+    resendObs.subscribe({
       next: () => {
         this.resending = false;
         this.success = 'A new verification code has been sent.';

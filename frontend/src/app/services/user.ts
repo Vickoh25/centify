@@ -80,8 +80,22 @@ export class UserService {
     return this.http.post<User>(`${this.apiUrl}/verify-email`, { code });
   }
 
+  /**
+   * Verify email by providing email address and code (for unverified users without a JWT).
+   */
+  verifyEmailByEmail(email: string, code: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/verify-email/by-email`, { email, code });
+  }
+
   resendOtp(): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/resend-otp`, {});
+  }
+
+  /**
+   * Resend OTP by providing email address (for unverified users without a JWT).
+   */
+  resendOtpByEmail(email: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/resend-otp/by-email`, { email });
   }
 
   delete(id: number): Observable<void> {

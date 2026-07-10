@@ -28,25 +28,46 @@ export class AuthService {
   }
 
   login(request: LoginRequest) {
-    return this.userService.login(request).pipe(tap(response => this.setSession(response)));
+    return this.userService.login(request).pipe(tap(response => {
+      if (response.token) {
+        this.setSession(response);
+      } else {
+        // No token — email not verified. Store user only (for email display) and redirect to verify-email.
+        this.storeUser(response.user);
+      }
+    }));
   }
 
   verifyEmail(code: string) {
-  return this.userService.verifyEmail(code).pipe(
-    tap(user => {
-      const response: AuthResponse = {
-        user,
-        token: this.getToken() || '',
-        message: 'Email verified'
-      };
-      this.setSession(response);
-    })
-  );
-}
+    return this.userService.verifyEmail(code).pipe(
+      tap(user => {
+        const response: AuthResponse = {
+          user,
+          token: this.getToken() || '',
+          message: 'Email verified'
+        };
+        this.setSession(response);
+      })
+    );
+  }
 
-resendOtp() {
-  return this.userService.resendOtp();
-}
+  verifyEmailByEmail(email: string, code: string) {
+    return this.userService.verifyEmailByEmail(email, code).pipe(
+      tap(user => {
+        // After verification, update the stored user with emailVerified = true
+        this.storeUser(user);
+      })
+    );
+  }
+
+  resendOtp() {
+    return this.userService.resendOtp();
+  }
+
+  resendOtpByEmail(email: string) {
+    return this.userService.resendOtpByEmail(email);
+  }
+
   updateProfile(request: ProfileUpdateRequest) {
     const user = this.currentUser();
     if (!user?.id) {

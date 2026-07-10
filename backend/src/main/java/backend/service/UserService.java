@@ -66,7 +66,15 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
-        return new AuthResponse(user, jwtService.generateToken(user), "Login successful");
+        if (Boolean.TRUE.equals(user.getEmailVerified())) {
+            return new AuthResponse(user, jwtService.generateToken(user), "Login successful");
+        }
+
+        // Email not verified — send OTP and return user with a verification prompt
+        String otp = prepareEmailOtp(user);
+        userRepository.save(user);
+        emailOtpService.sendOtp(user.getEmail(), otp);
+        return new AuthResponse(user, null, "Email not verified. A verification code has been sent to your email.");
     }
 
     public User verifyEmail(Long userId, String code) {
@@ -105,6 +113,18 @@ public class UserService {
         User saved = userRepository.save(user);
         emailOtpService.sendOtp(saved.getEmail(), otp);
         return saved;
+    }
+
+    public User verifyEmailByEmail(String email, String code) {
+        User user = userRepository.findByEmail(normalizeEmail(email))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return verifyEmail(user.getId(), code);
+    }
+
+    public User resendEmailOtpByEmail(String email) {
+        User user = userRepository.findByEmail(normalizeEmail(email))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return resendEmailOtp(user.getId());
     }
 
     public User updateProfile(Long id, ProfileUpdateRequest request) {
