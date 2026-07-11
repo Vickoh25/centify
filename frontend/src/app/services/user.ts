@@ -10,6 +10,7 @@ export interface User {
   email: string;
   currency: string;
   emailVerified?: boolean;
+  twoFactorEnabled?: boolean;
 }
 
 export interface RegisterRequest {
@@ -96,6 +97,18 @@ export class UserService {
    */
   resendOtpByEmail(email: string): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/resend-otp/by-email`, { email });
+  }
+
+  verifyTwoFactor(userId: number, code: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/${userId}/verify-2fa`, { code });
+  }
+
+  enableTwoFactor(userId: number): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/${userId}/enable-2fa`, {});
+  }
+
+  disableTwoFactor(userId: number): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/${userId}/disable-2fa`, {});
   }
 
   delete(id: number): Observable<void> {

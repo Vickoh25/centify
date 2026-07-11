@@ -11,10 +11,11 @@ import { AuthService } from '../../services/auth';
   styleUrl: './auth.scss'
 })
 export class AuthComponent implements OnInit {
-  mode: 'login' | 'register' = 'login';
+  mode: 'login' | 'register' | '2fa' = 'login';
   loading = false;
   error = '';
   showVerificationNotice = false;
+  twoFactorCode = '';
 
   form = {
     firstName: '',
@@ -33,7 +34,6 @@ export class AuthComponent implements OnInit {
   ngOnInit() {
     this.mode = this.router.url === '/register' ? 'register' : 'login';
 
-    // Check if user was redirected from verification success
     this.route.queryParams.subscribe(params => {
       if (params['verified'] === 'true') {
         this.showVerificationNotice = false;
@@ -60,8 +60,13 @@ export class AuthComponent implements OnInit {
       next: (response) => {
         this.loading = false;
 
-        // If login returned no token, the user's email is not verified
         if (this.mode === 'login' && !response?.token) {
+          const msg = response?.message || '';
+          if (msg.includes('2FA')) {
+            this.mode = '2fa';
+            this.twoFactorCode = '';
+            return;
+          }
           this.router.navigate(['/verify-email']);
           return;
         }
@@ -70,15 +75,33 @@ export class AuthComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-
-        // Check if the error is about email verification
         const msg = err?.error?.message || err?.error?.error || '';
         if (msg.toLowerCase().includes('verification') || msg.toLowerCase().includes('verify')) {
           this.router.navigate(['/verify-email']);
           return;
         }
-
         this.error = msg || 'Authentication failed. Please try again.';
+      }
+    });
+  }
+
+  submit2FA() {
+    this.error = '';
+
+    if (!this.twoFactorCode.trim()) {
+      this.error = 'Enter the 2FA code sent to your email.';
+      return;
+    }
+
+    this.loading = true;
+    this.authService.verifyTwoFactor(this.twoFactorCode).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err?.error?.message || 'Invalid 2FA code. Please try again.';
       }
     });
   }
@@ -87,6 +110,7 @@ export class AuthComponent implements OnInit {
     this.mode = mode;
     this.error = '';
     this.showVerificationNotice = false;
+    this.twoFactorCode = '';
   }
 
   private isFormValid(): boolean {

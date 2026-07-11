@@ -54,10 +54,42 @@ export class AuthService {
   verifyEmailByEmail(email: string, code: string) {
     return this.userService.verifyEmailByEmail(email, code).pipe(
       tap(user => {
-        // After verification, update the stored user with emailVerified = true
         this.storeUser(user);
       })
     );
+  }
+
+  verifyTwoFactor(code: string) {
+    const user = this.currentUser();
+    if (!user?.id) {
+      throw new Error('No user for 2FA verification');
+    }
+    return this.userService.verifyTwoFactor(user.id, code).pipe(
+      tap(updatedUser => {
+        const response: AuthResponse = {
+          user: updatedUser,
+          token: this.getToken() || '',
+          message: '2FA verified'
+        };
+        this.setSession(response);
+      })
+    );
+  }
+
+  enableTwoFactor() {
+    const user = this.currentUser();
+    if (!user?.id) {
+      throw new Error('No signed-in user');
+    }
+    return this.userService.enableTwoFactor(user.id).pipe(tap(updated => this.storeUser(updated)));
+  }
+
+  disableTwoFactor() {
+    const user = this.currentUser();
+    if (!user?.id) {
+      throw new Error('No signed-in user');
+    }
+    return this.userService.disableTwoFactor(user.id).pipe(tap(updated => this.storeUser(updated)));
   }
 
   resendOtp() {

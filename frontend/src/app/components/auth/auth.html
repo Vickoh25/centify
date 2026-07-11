@@ -6,14 +6,24 @@
       </div>
       <div>
         <h1>Centify</h1>
-        <p>{{ mode === 'login' ? 'Sign in to manage your money' : 'Create your Centify account' }}</p>
+        <p>
+          @if (mode === '2fa') {
+            Verify your identity
+          } @else if (mode === 'login') {
+            Sign in to manage your money
+          } @else {
+            Create your Centify account
+          }
+        </p>
       </div>
     </div>
 
-    <div class="mode-tabs">
-      <button type="button" [class.active]="mode === 'login'" (click)="switchMode('login')">Login</button>
-      <button type="button" [class.active]="mode === 'register'" (click)="switchMode('register')">Register</button>
-    </div>
+    @if (mode !== '2fa') {
+      <div class="mode-tabs">
+        <button type="button" [class.active]="mode === 'login'" (click)="switchMode('login')">Login</button>
+        <button type="button" [class.active]="mode === 'register'" (click)="switchMode('register')">Register</button>
+      </div>
+    }
 
     @if (error) {
       <div class="alert">{{ error }}</div>
@@ -26,45 +36,74 @@
       </div>
     }
 
-    <form (ngSubmit)="submit()" class="auth-form">
-      @if (mode === 'register') {
-        <div class="form-row">
-          <div class="form-group">
-            <label>First Name</label>
-            <input name="firstName" [(ngModel)]="form.firstName" required maxlength="80" autocomplete="given-name">
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input name="lastName" [(ngModel)]="form.lastName" required maxlength="80" autocomplete="family-name">
-          </div>
+    @if (mode === '2fa') {
+      <form (ngSubmit)="submit2FA()" class="auth-form">
+        <div class="alert info">
+          <i class="fa-solid fa-shield"></i>
+          <span>A verification code has been sent to your email. Enter it below to continue.</span>
         </div>
-      }
 
-      <div class="form-group">
-        <label>Email</label>
-        <input name="email" [(ngModel)]="form.email" type="email" required autocomplete="email">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input name="password" [(ngModel)]="form.password" type="password" required minlength="8" maxlength="72" autocomplete="current-password">
-      </div>
-
-      @if (mode === 'register') {
         <div class="form-group">
-          <label>Default Currency</label>
-          <select name="currency" [(ngModel)]="form.currency">
-            <option value="USD">USD</option>
-            <option value="KES">KES</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-          </select>
+          <label>2FA Code</label>
+          <input 
+            name="twoFactorCode" 
+            [(ngModel)]="twoFactorCode" 
+            type="text" 
+            placeholder="Enter 6-digit code"
+            maxlength="6"
+            autocomplete="off"
+            required>
         </div>
-      }
 
-      <button class="btn btn-primary" type="submit" [disabled]="loading">
-        {{ loading ? 'Please wait...' : (mode === 'login' ? 'Login' : 'Create Account') }}
-      </button>
-    </form>
+        <button class="btn btn-primary" type="submit" [disabled]="loading">
+          {{ loading ? 'Verifying...' : 'Verify' }}
+        </button>
+
+        <button type="button" class="btn btn-secondary" (click)="switchMode('login')" [disabled]="loading">
+          Back to Login
+        </button>
+      </form>
+    } @else {
+      <form (ngSubmit)="submit()" class="auth-form">
+        @if (mode === 'register') {
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input name="firstName" [(ngModel)]="form.firstName" required maxlength="80" autocomplete="given-name">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input name="lastName" [(ngModel)]="form.lastName" required maxlength="80" autocomplete="family-name">
+            </div>
+          </div>
+        }
+
+        <div class="form-group">
+          <label>Email</label>
+          <input name="email" [(ngModel)]="form.email" type="email" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input name="password" [(ngModel)]="form.password" type="password" required minlength="8" maxlength="72" autocomplete="current-password">
+        </div>
+
+        @if (mode === 'register') {
+          <div class="form-group">
+            <label>Default Currency</label>
+            <select name="currency" [(ngModel)]="form.currency">
+              <option value="USD">USD</option>
+              <option value="KES">KES</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+        }
+
+        <button class="btn btn-primary" type="submit" [disabled]="loading">
+          {{ loading ? 'Please wait...' : (mode === 'login' ? 'Login' : 'Create Account') }}
+        </button>
+      </form>
+    }
   </div>
 </div>
