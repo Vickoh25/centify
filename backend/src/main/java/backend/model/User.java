@@ -36,7 +36,7 @@ public class User {
     @JsonIgnore
     private LocalDateTime emailOtpExpiresAt;
 
-    private Boolean twoFactorEnabled = false;
+    private Boolean twoFactorEnabled = true;
 
     @JsonIgnore
     private String twoFactorOtpHash;
